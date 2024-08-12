@@ -21,6 +21,6 @@ def draw_menu(context, menu_name):
             })
         return menu
 
-    menu_items = MenuItem.objects.filter(menu_name=menu_name).order_by('parent', 'order')
+    menu_items = MenuItem.objects.filter(menu_name=menu_name).select_related('parent').order_by('parent', 'order')
     menu_tree = build_menu(menu_items)
     return {'menu_tree': menu_tree}
