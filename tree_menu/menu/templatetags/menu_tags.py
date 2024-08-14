@@ -11,14 +11,16 @@ def draw_menu(context, menu_name):
     def build_menu(items, parent=None):
         menu = []
         for item in items:
-            children = items.filter(parent=item)
-            is_active = current_url.startswith(item.get_url())
-            menu.append({
-                'item': item,
-                'children': build_menu(children),
-                'is_active': is_active,
-                'is_parent': parent is None,
-            })
+            # Only add items that have the correct parent
+            if item.parent == parent:
+                children = build_menu(items, parent=item)
+                is_active = current_url.startswith(item.get_url())
+                menu.append({
+                    'item': item,
+                    'children': children,
+                    'is_active': is_active,
+                    'is_parent': parent is None,
+                })
         return menu
 
     menu_items = MenuItem.objects.filter(menu_name=menu_name).select_related('parent').order_by('parent', 'order')
